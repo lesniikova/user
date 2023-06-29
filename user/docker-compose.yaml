@@ -1,0 +1,22 @@
+version: "3"
+networks:
+  mynetwork:
+    external: true
+services:
+  py-api:
+    build: ./userservice
+    networks:
+      - mynetwork
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+  mongo: 
+    build: ./mongo
+    volumes:
+      - ./mongo/mongo-data:/data/db
+      - ./mongo/mongo-app:/var/www/html
+    networks:
+      - mynetwork
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017/user-service
